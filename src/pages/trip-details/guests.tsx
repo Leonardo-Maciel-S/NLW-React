@@ -1,37 +1,56 @@
-import { Link2, Plus } from "lucide-react";
+import { CheckCircle, CheckCircle2, CircleDashed, Plus, UserCog } from "lucide-react";
 import { Button } from "../../components/button";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { api } from "../../lib/axios";
+
+interface Participants {
+    id: string,
+    name: string | null,
+    email: string, 
+    is_confirmed: boolean
+}
 
 export function Guests() {
+    const { tripId } = useParams()
+    const [participants, setParticipants] = useState<Participants[]>([])
+
+    useEffect(() => {
+        api.get(`/trips/${tripId}/participants}`).then(response => setParticipants(response.data.c))
+    }, [tripId])
+    
+    console.log(api.get(`/trips/${tripId}/participants}`))
+
     return (
         <div className="space-y-6">
+                        <h2 className="font-semibold text-xl">Convidados</h2> 
+                        <div className="space-y-5">
+                            {participants.map((participant) => {
+                                return (
+                                    <div key={participant.id} className="flex items-center justify-between gap-4">
+                                        <div className="space-y-1.5">
+                                            <span className="block font-medium text-zinc-100">{ participant.name}</span>
+                                            <span className="block text-sm text-zinc-400 truncate">
+                                                {participant.email}
+                                            </span>
+                                        </div>
+                                        {participant.is_confirmed ? (
+                                            <CheckCircle2 className="size-5 shrink-0 text-green-400"/>
+                                        ) : (
+                                            <CircleDashed className="text-zinc-400  size-5 shrink-0"/>    
+                                        )}
+                                    </div>
+                                )       
+                            })}
 
-            <h2 className="font-semibold text-xl">Links importantes</h2> 
-            <div className="space-y-5">
-                <div className="flex items-center justify-between gap-4">
-                    <div className="space-y-1.5">
-                        <span className="block font-medium text-zinc-100">Reserva do AirBnB</span>
-                        <a href="#" className="block text-xs text-zinc-400 truncate hover:text-zinc-300">
-                            https://www.airbnb.com.br/rooms/104700011
-                        </a>
+                            
+                        </div>
+                        
+                        
+                        <Button variant="secondary" size='full'>
+                            <UserCog className='size-5'/>
+                            Gerenciar convidados
+                        </Button>
                     </div>
-                    <Link2 className="text-zinc-400  size-5 shrink-0"/>
-                </div>
-
-                <div className="flex items-center justify-between gap-4">
-                    <div className="space-y-1.5">
-                        <span className="block font-medium text-zinc-100">Regras da casa</span>
-                        <a href="#" className="block text-xs text-zinc-400 truncate hover:text-zinc-300">
-                            https://www.airbnb.com.br/rooms/104700011
-                        </a>
-                    </div>
-                    <Link2 className="text-zinc-400  size-5 shrink-0"/>
-                </div>
-            </div>
-                                
-            <Button variant="secondary" size='full'>
-                <Plus className='size-5'/>
-                Cadastrar novo link
-            </Button>
-        </div>
     ) 
 }

@@ -1,12 +1,16 @@
 import { Calendar, MapPin, Plus, Settings2 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CreateActivityModal } from "./create-activity-modal";
-import { ImportantLinks } from "./important-links";
 import { Guests } from "./guests";
+import { ImportantLinks } from "./important-links";
 import { Activity } from "./activitys";
 import { DestinationAndDateHeader } from "./destination-and-date-header";
 
+
+
 export function TripDetailsPage() {
+
+    
     const [isCreateActivityModalOpen, setIsCreateActivityModalOpen] = useState(false)
 
     function openCreateActivityModal() {
@@ -35,11 +39,11 @@ export function TripDetailsPage() {
                 </div>
 
                 <div className="w-80 space-y-6">
-                    <Guests/>
+                    <ImportantLinks />
                     
                     <div className='w-full h-px bg-zinc-800' />
                     
-                    <ImportantLinks/>
+                    <Guests/>
 
                 </div>
             </main>
